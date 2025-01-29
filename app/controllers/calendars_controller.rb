@@ -8,7 +8,7 @@ class CalendarsController < ApplicationController
   # 予定の保存
   def create
     Plan.create(plan_params)
-    redirect_to action: :index
+    redirect_to action: :index, date: params[:plan][:date]
   end
 
   private
@@ -20,7 +20,11 @@ class CalendarsController < ApplicationController
   def get_week
     wdays = ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)']
 
-    @todays_date = Date.today
+    if params[:date].present?
+      @todays_date = Date.parse(params[:date])
+    else
+      @todays_date = Date.today
+    end
     @week_days = []
 
     plans = Plan.where(date: @todays_date..@todays_date + 6)
